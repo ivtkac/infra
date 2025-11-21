@@ -1,0 +1,2 @@
+@daily /usr/local/bin/podman-volume-backup.sh
+@weekly rsync -a /var/backups/* ivktac@192.168.0.130:/var/backups/
