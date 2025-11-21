@@ -1,0 +1,15 @@
+- name: Configure Nginx Virtual Hosts
+  hosts: webservers
+  become: true
+  roles:
+    - nginx-vhosts
+  vars:
+    nginx_vhosts:
+      - server_name: code.gearxxed.com
+        listen: 80
+        listen_ipv6: false
+        client_max_body_size: 512M
+        location_root:
+          proxy_pass: "http://127.0.0.1:4000"
+          headers: true
+          websocket: true

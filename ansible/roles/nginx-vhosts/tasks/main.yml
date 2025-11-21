@@ -1,0 +1,22 @@
+- name: Ensure nginx is installed
+  ansible.builtin.package:
+    name: nginx
+    state: present
+
+- name: Create vhost config files
+  ansible.builtin.template:
+    src: vhost.conf.j2
+    dest: "{{ nginx_vhosts_path }}/{{ item.server_name }}.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ nginx_vhosts }}"
+  notify: Reload nginx
+
+- name: Ensure document roots exist
+  ansible.builtin.file:
+    path: "{{ item.root }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ nginx_vhosts }}"
+  when: item.root is defined

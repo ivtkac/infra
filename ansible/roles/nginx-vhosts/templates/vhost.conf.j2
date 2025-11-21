@@ -1,0 +1,41 @@
+server {
+    listen {{ item.listen | default('80') }};
+{% if item.listen_ipv6 | default(false) %}
+    listen [::]:{{item.listen | default('80') }};
+{% endif %}
+    server_name {{ item.server_name }};
+{% if item.root is defined %}
+    root {{ item.root }};
+{% endif %}
+{% if item.index is defined %}
+    index {{ item.index }};
+{% endif %}
+{% if item.client_max_body_size is defined %}
+        client_max_body_size {{ item.client_max_body_size }};
+{% endif %}
+{% if item.location_root is defined %}
+    location / {
+{% if item.location_root.proxy_pass is defined %}
+        proxy_pass {{ item.location_root.proxy_pass }};
+{% if item.location_root.websocket | default(false) %}
+{% if item.location_root.redirect is defined %}
+        proxy_redirect {{ item.location_root.redirect }};
+{% endif %}
+        proxy_set_header Connection $http_connection;
+        proxy_set_header Upgrade $http_upgrade;
+{% endif %}
+{% if item.location_root.headers | default(true) %}
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+{% endif %}
+{% endif %}
+{% if item.timeot is defined %}
+    proxy_read_timeout {{ item.timeout.read }};
+    proxy_send_timeout {{ item.timeout.send }};
+    send_timeout       {{ item.timeout.send }};
+{% endif %}
+    }
+{% endif %}
+}
