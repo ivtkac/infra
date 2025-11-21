@@ -1,0 +1,31 @@
+[Unit]
+Description=Forgejo
+After=forgejo-db.service nginx.service
+Requires=forgejo-db.service nginx.service
+
+[Container]
+ContainerName=forgejo
+
+Image=codeberg.org/forgejo/forgejo:12-rootless
+AutoUpdate=registry
+
+Network=forgejo.network
+
+Volume=forgejo-data:/var/lib/gitea
+Volume=forgejo-config:/etc/gitea
+
+PublishPort=4000:3000
+PublishPort=2222:2222
+
+Environment=FORGJEO__database__DB_TYPE=postgres
+Environment=FORGEJO__database__HOST=forgejo-db:5432
+Environment=FORGEJO__database__NAME=forgejo
+
+Secret=forgejo-db-user,type=env,target=FORGEJO__database__USER
+Secret=forgejo-db-password,type=env,target=FORGEJO__database__PASSWD
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

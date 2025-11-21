@@ -1,0 +1,21 @@
+[Unit]
+Description=PostgresSQL Database for Forgejo
+
+[Container]
+ContainerName=forgejo-db
+
+Image=docker.io/postgres:14
+
+Network=forgejo.network
+Volume=forgejo-db-data:/var/lib/postgresql/data
+
+Environment=POSTGRES_DB=forgejo
+
+Secret=forgejo-db-user,type=env,target=POSTGRES_USER
+Secret=forgejo-db-password,type=env,target=POSTGRES_PASSWORD
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
