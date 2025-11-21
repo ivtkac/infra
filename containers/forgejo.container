@@ -1,7 +1,7 @@
 [Unit]
 Description=Forgejo
-After=forgejo-db.service nginx.service
-Requires=forgejo-db.service nginx.service
+After=network-online.target forgejo-db.service
+Requires=network-online.target forgejo-db.service
 
 [Container]
 ContainerName=forgejo
@@ -11,11 +11,13 @@ AutoUpdate=registry
 
 Network=forgejo.network
 
-Volume=forgejo-data:/var/lib/gitea
-Volume=forgejo-config:/etc/gitea
+Volume=forgejo-data:/var/lib/gitea:Z
+Volume=forgejo-config:/etc/gitea:Z
 
 PublishPort=4000:3000
 PublishPort=2222:2222
+
+ShmSize=256m
 
 Environment=FORGJEO__database__DB_TYPE=postgres
 Environment=FORGEJO__database__HOST=forgejo-db:5432
