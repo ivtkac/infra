@@ -1,0 +1,2 @@
+backup_user: "{{ vault_backup_user }}"
+backup_host: "{{ vault_backup_host }}"

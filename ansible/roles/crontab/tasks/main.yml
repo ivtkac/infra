@@ -1,0 +1,5 @@
+- name: Install user crontab
+  ansible.builtin.template:
+    src: crontab.j2
+    dest: /var/spool/cron/{{ ansible_user_id }}
+    mode: '0600'

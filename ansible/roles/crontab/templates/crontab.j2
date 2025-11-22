@@ -1,0 +1,4 @@
+@daily /usr/local/bin/podman-volume-backup.sh
+@weekly rsync -a /var/backups/* {{ backup_user }}@{{ backup_host }}:/var/backups
+*/30 * * * * {{ ansible_env.HOME }}/.local/bin/sync_notes.sh
+@monthly {{ ansible_env.HOME }}/.local/bin/clean_logs.sh
